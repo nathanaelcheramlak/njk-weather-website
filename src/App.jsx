@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { Logo } from '../public/index.js';
-import './App.css';
+import { useEffect, useState } from "react";
+import { Logo } from "../public/index.js";
+import "./App.css";
 
 function App() {
-  const API_KEY = "f502612d6860ec823e2e3d87d73bff57";
+  const API_KEY = import.meta.env.VITE_API_KEY;
   const [searchText, setSearchText] = useState("Addis Ababa");
   const [latLon, setLatLon] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
@@ -19,16 +19,16 @@ function App() {
     try {
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       const data = await response.json();
       if (data.length > 0) {
         setLatLon(data[0]);
       } else {
-        console.error('No data found for the given city.');
+        console.error("No data found for the given city.");
       }
     } catch (error) {
-      console.error('There was a problem with your fetch operation:', error);
+      console.error("There was a problem with your fetch operation:", error);
     }
   };
 
@@ -37,13 +37,13 @@ function App() {
     try {
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       const data = await response.json();
       setWeatherData(data);
       setLoading(false);
     } catch (error) {
-      console.error('There was a problem with your fetch operation:', error);
+      console.error("There was a problem with your fetch operation:", error);
     }
   };
 
@@ -59,7 +59,7 @@ function App() {
 
   // Handle key down event to detect Enter key
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleSearch();
     }
   };
@@ -72,11 +72,11 @@ function App() {
           <h1>NJK Weather</h1>
         </div>
         <div className="search-container">
-          <input 
-            value={searchText} 
-            onChange={(e) => setSearchText(e.target.value)} 
+          <input
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
             onKeyDown={handleKeyDown} // Add key down event listener
-            placeholder='Search City' 
+            placeholder="Search City"
           />
           <button onClick={handleSearch}>Search</button>
         </div>
@@ -89,10 +89,19 @@ function App() {
           </div>
         ) : (
           <>
-            <img src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`} alt="Weather Icon" />
-            <h2>{weatherData.main.temp}<span>&deg;C</span></h2>
+            <img
+              src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`}
+              alt="Weather Icon"
+            />
+            <h2>
+              {weatherData.main.temp}
+              <span>&deg;C</span>
+            </h2>
             <h4>Feels Like</h4>
-            <h3>{weatherData.main.feels_like}<span>&deg;C</span></h3>
+            <h3>
+              {weatherData.main.feels_like}
+              <span>&deg;C</span>
+            </h3>
             <h4>{weatherData.name}</h4>
             <p>{weatherData.sys.country}</p>
           </>
@@ -106,9 +115,24 @@ function App() {
           </div>
         ) : (
           <>
-            <h4 style={{margin: '0'}}>Min Temp <br/> <h3 style={{marginBottom: '20px'}}>{weatherData.main.temp_min}<span>&deg;C</span></h3></h4>
-            <h4  style={{margin: '0'}}>Max Temp <br/> <h3 style={{marginBottom: '10px'}}>{weatherData.main.temp_max}<span>&deg;C</span></h3></h4>
-            <h3 style={{margin: '0'}}>{weatherData.weather[0].description.charAt(0).toUpperCase() + weatherData.weather[0].description.slice(1)}</h3>
+            <h4 style={{ margin: "0" }}>
+              Min Temp <br />{" "}
+              <h3 style={{ marginBottom: "20px" }}>
+                {weatherData.main.temp_min}
+                <span>&deg;C</span>
+              </h3>
+            </h4>
+            <h4 style={{ margin: "0" }}>
+              Max Temp <br />{" "}
+              <h3 style={{ marginBottom: "10px" }}>
+                {weatherData.main.temp_max}
+                <span>&deg;C</span>
+              </h3>
+            </h4>
+            <h3 style={{ margin: "0" }}>
+              {weatherData.weather[0].description.charAt(0).toUpperCase() +
+                weatherData.weather[0].description.slice(1)}
+            </h3>
           </>
         )}
       </div>
@@ -120,8 +144,18 @@ function App() {
           </div>
         ) : (
           <>
-            <h4>Sunrise <br/> <h3 style={{marginBottom: '20px'}}>{new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString()}</h3></h4>
-            <h4>Sunset <br/> <h3>{new Date(weatherData.sys.sunset * 1000).toLocaleTimeString()}</h3></h4>
+            <h4>
+              Sunrise <br />{" "}
+              <h3 style={{ marginBottom: "20px" }}>
+                {new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString()}
+              </h3>
+            </h4>
+            <h4>
+              Sunset <br />{" "}
+              <h3>
+                {new Date(weatherData.sys.sunset * 1000).toLocaleTimeString()}
+              </h3>
+            </h4>
           </>
         )}
       </div>
@@ -133,17 +167,17 @@ function App() {
           </div>
         ) : (
           <>
-            <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
-              <h4 style={{margin: '0'}}>Humidity</h4>
-              <h3 style={{margin: '0'}}>{weatherData.main.humidity}%</h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+              <h4 style={{ margin: "0" }}>Humidity</h4>
+              <h3 style={{ margin: "0" }}>{weatherData.main.humidity}%</h3>
             </div>
-            <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
-              <h4 style={{margin: '0'}}>Pressure</h4>
-              <h3 style={{margin: '0'}}>{weatherData.main.pressure} hPa</h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+              <h4 style={{ margin: "0" }}>Pressure</h4>
+              <h3 style={{ margin: "0" }}>{weatherData.main.pressure} hPa</h3>
             </div>
-            <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
-              <h4 style={{margin: '0'}}>Wind Speed</h4>
-              <h3 style={{margin: '0'}}>{weatherData.wind.speed} m/s</h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+              <h4 style={{ margin: "0" }}>Wind Speed</h4>
+              <h3 style={{ margin: "0" }}>{weatherData.wind.speed} m/s</h3>
             </div>
           </>
         )}
