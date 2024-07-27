@@ -4,5 +4,5 @@
 
 Made using React
 
-By Nathanael Cheramlak
+By **Nathanael Cheramlak**
 July 15, 2024
