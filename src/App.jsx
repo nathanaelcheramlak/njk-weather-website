@@ -8,6 +8,7 @@ function App() {
   const [latLon, setLatLon] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSearch = () => {
     getLatLon(searchText);
@@ -24,10 +25,15 @@ function App() {
       const data = await response.json();
       if (data.length > 0) {
         setLatLon(data[0]);
+        setErrorMessage("");
       } else {
+        setLoading(false);
+        setErrorMessage("No City Found!");
         console.error("No data found for the given city.");
       }
     } catch (error) {
+      setErrorMessage("We had a problem getting your data, please try again.");
+      setLoading(false);
       console.error("There was a problem with your fetch operation:", error);
     }
   };
@@ -42,7 +48,10 @@ function App() {
       const data = await response.json();
       setWeatherData(data);
       setLoading(false);
+      setErrorMessage("");
     } catch (error) {
+      setErrorMessage("We had a problem getting your data, please try again.");
+      setLoading(false);
       console.error("There was a problem with your fetch operation:", error);
     }
   };
@@ -57,7 +66,6 @@ function App() {
     }
   }, [latLon]);
 
-  // Handle key down event to detect Enter key
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       handleSearch();
@@ -75,20 +83,22 @@ function App() {
           <input
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            onKeyDown={handleKeyDown} // Add key down event listener
+            onKeyDown={handleKeyDown}
             placeholder="Search City"
           />
           <button onClick={handleSearch}>Search</button>
         </div>
       </div>
-      <div className="main-content">
-        {loading ? (
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <div className="loading-text">Loading...</div>
-          </div>
-        ) : (
-          <>
+      {loading ? (
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <div className="loading-text">Loading...</div>
+        </div>
+      ) : errorMessage ? (
+        <div className="error-message">{errorMessage}</div>
+      ) : (
+        <>
+          <div className="main-content">
             <img
               src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`}
               alt="Weather Icon"
@@ -104,26 +114,17 @@ function App() {
             </h3>
             <h4>{weatherData.name}</h4>
             <p>{weatherData.sys.country}</p>
-          </>
-        )}
-      </div>
-      <div className="related-info">
-        {loading ? (
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <div className="loading-text">Loading...</div>
           </div>
-        ) : (
-          <>
+          <div className="related-info">
             <h4 style={{ margin: "0" }}>
-              Min Temp <br />{" "}
+              Min Temp <br />
               <h3 style={{ marginBottom: "20px" }}>
                 {weatherData.main.temp_min}
                 <span>&deg;C</span>
               </h3>
             </h4>
             <h4 style={{ margin: "0" }}>
-              Max Temp <br />{" "}
+              Max Temp <br />
               <h3 style={{ marginBottom: "10px" }}>
                 {weatherData.main.temp_max}
                 <span>&deg;C</span>
@@ -133,40 +134,22 @@ function App() {
               {weatherData.weather[0].description.charAt(0).toUpperCase() +
                 weatherData.weather[0].description.slice(1)}
             </h3>
-          </>
-        )}
-      </div>
-      <div className="feels-like">
-        {loading ? (
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <div className="loading-text">Loading...</div>
           </div>
-        ) : (
-          <>
+          <div className="feels-like">
             <h4>
-              Sunrise <br />{" "}
+              Sunrise <br />
               <h3 style={{ marginBottom: "20px" }}>
                 {new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString()}
               </h3>
             </h4>
             <h4>
-              Sunset <br />{" "}
+              Sunset <br />
               <h3>
                 {new Date(weatherData.sys.sunset * 1000).toLocaleTimeString()}
               </h3>
             </h4>
-          </>
-        )}
-      </div>
-      <div className="more-info">
-        {loading ? (
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <div className="loading-text">Loading...</div>
           </div>
-        ) : (
-          <>
+          <div className="more-info">
             <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
               <h4 style={{ margin: "0" }}>Humidity</h4>
               <h3 style={{ margin: "0" }}>{weatherData.main.humidity}%</h3>
@@ -179,9 +162,9 @@ function App() {
               <h4 style={{ margin: "0" }}>Wind Speed</h4>
               <h3 style={{ margin: "0" }}>{weatherData.wind.speed} m/s</h3>
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
       <footer className="footer">
         <p>Developed by Nathanael &copy; 2024</p>
       </footer>
