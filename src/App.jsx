@@ -73,6 +73,7 @@ function App() {
   };
 
   return (
+    <main>
     <div className="grid-container">
       <div className="header">
         <div className="heading">
@@ -169,6 +170,7 @@ function App() {
         <p>Developed by Nathanael &copy; 2024</p>
       </footer>
     </div>
+    </main>
   );
 }
 
