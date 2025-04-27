@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Logo } from "../public/index.js";
+// import { Logo } from "../public/index.js";
 import "./App.css";
 
 function App() {
@@ -77,7 +77,7 @@ function App() {
     <div className="grid-container">
       <div className="header">
         <div className="heading">
-          <img src={Logo} alt="Logo" />
+          <img src="./logo.jpg" alt="Logo" />
           <h1>NJK Weather</h1>
         </div>
         <div className="search-container">
